@@ -1,0 +1,41 @@
+<project name="Desafio Luxfacta" default="main" basedir=".">
+  <target name="clean">
+    <delete dir="build"/>
+  </target>
+
+  <target name="compile">
+    <mkdir dir="build/classes"/>
+    <javac srcdir="src" destdir="build/classes" encoding="UTF-8"/>
+  </target>
+
+  <property name="report.dir" location="report" />
+  <property name="test.dir" location="tests" />
+  <property name="test.classes.dir" location="build/classes" />
+
+  <property name="lib.dir" value="lib"/>
+  <path id="classpath-tests">
+      <fileset dir="${lib.dir}" includes="**/*.jar"/>
+  </path>
+
+  <target name="compile-tests" depends="compile">
+    <mkdir dir="${test.classes.dir}"/>
+    <javac srcdir="${test.dir}" destdir="${test.classes.dir}" classpathref="classpath-tests" encoding="UTF-8"/>
+  </target>
+
+  <target name="junit" depends="compile-tests">
+    <mkdir dir="${report.dir}"/>
+    <junit printsummary="yes" haltonfailure="no">
+  		<classpath refid="classpath-tests" />
+    	<classpath location="${test.classes.dir}" />
+
+    	<formatter type="xml" />
+    	<formatter type="plain" />
+
+    	<batchtest fork="yes" todir="${report.dir}">
+    		<fileset dir="${test.dir}">
+    			<include name="**/*Test*.java" />
+    		</fileset>
+    	</batchtest>
+    </junit>
+  </target>
+</project>
